@@ -16,9 +16,9 @@ struct TopArticlesListView: View {
         ScrollView {
             ForEach(articles) {a in
                 TopArticleView(
-                    imageUrl: a.imageUrl,
+                    imageUrl: a.urlToImage,
                     title: a.title,
-                    date: a.date,
+                    date: a.publishedAt,
                     author: a.author
                 )
             }

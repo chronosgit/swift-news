@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct ContentView: View {
+    typealias Article = NewsModel.Article
+    
     @ObservedObject var newsModel: NewsModel
     
     var body: some View {
@@ -21,11 +23,18 @@ struct ContentView: View {
                     Text("All news")
                 } else {
                     TopArticlesListView(articles: newsModel.articles)
+//                        .task {
+//                            print("Fetch on load")
+//                            await newsModel.updateTopNews()
+//                        }
+                        .task {
+                            await newsModel.updateTopNews()
+                        }
                 }
                 
                 Spacer()
                 
-                TabView(onClick: newsModel.chooseNews)
+                TabView(areAllNews: newsModel.allNews, onClick: newsModel.chooseNews)
             }
         }
             .foregroundColor(.accentColor)

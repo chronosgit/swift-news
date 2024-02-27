@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct TabView: View {
+    var areAllNews: Bool
     var onClick: (String) -> ()
     
     var body: some View {
@@ -17,6 +18,7 @@ struct TabView: View {
             TabButtonView(
                 title: "All",
                 imageName: "globe.europe.africa.fill",
+                areAllNews: areAllNews,
                 onClick: self.onClick
             )
             
@@ -25,6 +27,7 @@ struct TabView: View {
             TabButtonView(
                 title: "Top",
                 imageName: "person.2.wave.2.fill",
+                areAllNews: areAllNews,
                 onClick: self.onClick
             )
             

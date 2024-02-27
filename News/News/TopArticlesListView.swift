@@ -14,12 +14,14 @@ struct TopArticlesListView: View {
     
     var body: some View {
         ScrollView {
-            ForEach(articles) {a in
+            ForEach(0..<articles.count, id: \.self) {
+                let a = articles[$0]
+                
                 TopArticleView(
-                    imageUrl: a.urlToImage,
-                    title: a.title,
-                    date: a.publishedAt,
-                    author: a.author
+                    imageUrl: a.urlToImage!,
+                    title: a.title!,
+                    date: a.publishedAt!,
+                    author: a.author!
                 )
             }
         }

@@ -35,9 +35,7 @@ class NewsModel: ObservableObject {
         do {
             let responseData = try await getTopNews()
             
-            articles = responseData
-            
-            print("updateTopNews has been triggered")
+            articles = responseData.articles
         } catch APIError.invalidURL {
             print("Invalid URL")
         } catch APIError.invalidResponse {
@@ -49,11 +47,11 @@ class NewsModel: ObservableObject {
         }
     }
     
-    func getTopNews() async throws -> [Article] {
+    func getTopNews() async throws -> JSONArray {
         let apiKey = "11d441332483476f8871028f223af4da"
         let baseUrl = "https://newsapi.org/v2/"
-        let category = "health"
-        let endpoint = "\(baseUrl)top-headlines?category=\(category)&apiKey=\(apiKey)"
+        let country = "us"
+        let endpoint = "\(baseUrl)top-headlines?country=\(country)&apiKey=\(apiKey)"
         
         guard let url = URL(string: endpoint) else {
             throw APIError.invalidURL
@@ -69,19 +67,33 @@ class NewsModel: ObservableObject {
             let decoder = JSONDecoder()
             decoder.keyDecodingStrategy = .convertFromSnakeCase // just in case
             
-            // FIXME: - some error here occurs every time
-            return try decoder.decode([Article].self, from: data)
+            // FIXME: - some error here occurs a lot, be careful with data types
+            return try decoder.decode(JSONArray.self, from: data)
         } catch {
+            print(String(describing: error))
+            
             throw APIError.invalidData
         }
     }
     
-    struct Article: Identifiable, Codable {
-        var urlToImage: URL
-        var title: String
-        var publishedAt: String
-        var author: String
-        var id = UUID()
+    struct JSONArray: Codable {
+        var articles: [Article]
+    }
+    
+    struct Article: Codable {
+        var source: ArticleAPISource?
+        var urlToImage: String?
+        var url: String?
+        var title: String?
+        var content: String?
+        var description: String?
+        var publishedAt: String?
+        var author: String?
+    }
+    
+    struct ArticleAPISource: Codable {
+        var id: String?
+        var name: String?
     }
     
     enum APIError: Error {

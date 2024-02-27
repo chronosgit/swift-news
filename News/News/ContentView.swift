@@ -23,10 +23,6 @@ struct ContentView: View {
                     Text("All news")
                 } else {
                     TopArticlesListView(articles: newsModel.articles)
-//                        .task {
-//                            print("Fetch on load")
-//                            await newsModel.updateTopNews()
-//                        }
                         .task {
                             await newsModel.updateTopNews()
                         }

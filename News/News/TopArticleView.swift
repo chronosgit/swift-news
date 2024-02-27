@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct TopArticleView: View {
-    var imageUrl: URL
+    var imageUrl: String
     var title: String
     var date: String
     var author: String
@@ -16,18 +16,18 @@ struct TopArticleView: View {
     var body: some View {
         VStack {
             HStack(alignment: .top, spacing: 16) {
-                AsyncImage(
-                    url: imageUrl,
-                    content: {image in
-                        image
-                            .resizable()
-                    },
-                    placeholder: {
-                        SkeletonImageView()
-                    }
-                )
-                    .clipShape(Capsule())
-                    .frame(maxWidth: 150, maxHeight: 150)
+//                AsyncImage(
+//                    url: URL(string: imageUrl)!,
+//                    content: {image in
+//                        image
+//                            .resizable()
+//                    },
+//                    placeholder: {
+//                        SkeletonImageView()
+//                    }
+//                )
+//                    .clipShape(Capsule())
+//                    .frame(maxWidth: 150, maxHeight: 150)
                 
                 VStack(alignment: .leading, spacing: 15) {
                     Text(title)

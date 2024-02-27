@@ -9,11 +9,21 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        VStack {
-            Text("Welcome")
+            ZStack {
+                Color("bgColor")
+                    .ignoresSafeArea() // background changer
+                
+                VStack {
+                    Text("WHSREVER")
+                    
+                    Spacer()
+                    
+                    Tab()
+                }
+            }
+            .foregroundColor(.accentColor)
+
         }
-        .padding()
-    }
 }
 
 #Preview {

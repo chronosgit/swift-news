@@ -11,6 +11,8 @@
 		E9CE5F4F2B8DFFA000683B83 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9CE5F4E2B8DFFA000683B83 /* ContentView.swift */; };
 		E9CE5F512B8DFFA200683B83 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E9CE5F502B8DFFA200683B83 /* Assets.xcassets */; };
 		E9CE5F542B8DFFA200683B83 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E9CE5F532B8DFFA200683B83 /* Preview Assets.xcassets */; };
+		E9CE5F5B2B8E0B0900683B83 /* TabButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9CE5F5A2B8E0B0900683B83 /* TabButtonView.swift */; };
+		E9CE5F5D2B8E0DC500683B83 /* Tab.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9CE5F5C2B8E0DC500683B83 /* Tab.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +21,8 @@
 		E9CE5F4E2B8DFFA000683B83 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		E9CE5F502B8DFFA200683B83 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E9CE5F532B8DFFA200683B83 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		E9CE5F5A2B8E0B0900683B83 /* TabButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabButtonView.swift; sourceTree = "<group>"; };
+		E9CE5F5C2B8E0DC500683B83 /* Tab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tab.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,6 +58,8 @@
 				E9CE5F4C2B8DFFA000683B83 /* NewsApp.swift */,
 				E9CE5F4E2B8DFFA000683B83 /* ContentView.swift */,
 				E9CE5F502B8DFFA200683B83 /* Assets.xcassets */,
+				E9CE5F5C2B8E0DC500683B83 /* Tab.swift */,
+				E9CE5F5A2B8E0B0900683B83 /* TabButtonView.swift */,
 				E9CE5F522B8DFFA200683B83 /* Preview Content */,
 			);
 			path = News;
@@ -139,6 +145,8 @@
 			files = (
 				E9CE5F4F2B8DFFA000683B83 /* ContentView.swift in Sources */,
 				E9CE5F4D2B8DFFA000683B83 /* NewsApp.swift in Sources */,
+				E9CE5F5B2B8E0B0900683B83 /* TabButtonView.swift in Sources */,
+				E9CE5F5D2B8E0DC500683B83 /* Tab.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

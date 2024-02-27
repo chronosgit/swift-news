@@ -18,10 +18,10 @@ struct TopArticlesListView: View {
                 let a = articles[$0]
                 
                 TopArticleView(
-                    imageUrl: a.urlToImage!,
-                    title: a.title!,
-                    date: a.publishedAt!,
-                    author: a.author!
+                    imageUrl: a.urlToImage,
+                    title: a.title,
+                    date: a.publishedAt,
+                    author: a.author
                 )
             }
         }

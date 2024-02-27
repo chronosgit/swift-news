@@ -13,13 +13,10 @@ struct SkeletonImageView: View {
             RoundedRectangle(cornerRadius: /*@START_MENU_TOKEN@*/25.0/*@END_MENU_TOKEN@*/)
                 .foregroundColor(Color("secondBgColor"))
             
-            VStack {
-                Image(systemName: "questionmark.circle")
-                    .foregroundColor(.white)
-                    .font(.title)
-                
-                Text("Image not found")
-            }
+            Image("imagePlaceholder")
+                .resizable()
+                .foregroundColor(.white)
+                .font(.title)
         }
     }
 }

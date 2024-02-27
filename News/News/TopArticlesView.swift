@@ -55,12 +55,6 @@ struct TopArticlesView: View {
     ]
     
     var body: some View {
-        VStack {
-            TopArticlesListView(articles: articles)
-            
-            Spacer()
-            
-            TabView()
-        }
+        TopArticlesListView(articles: articles)
     }
 }

@@ -12,11 +12,15 @@ struct TabButtonView: View {
     var imageName: String
     
     var body: some View {
-        VStack(alignment: .center, spacing: 6) {
-            Image(systemName: imageName)
-            
-            Button(title) {}
-        }
+        Button(
+            action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/,
+            label: {
+                VStack(alignment: .center, spacing: 6) {
+                    Image(systemName: imageName)
+                    Text(title)
+                }
+            }
+        )
     }
 }
 

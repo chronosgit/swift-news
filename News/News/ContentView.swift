@@ -13,13 +13,7 @@ struct ContentView: View {
                 Color("bgColor")
                     .ignoresSafeArea() // background changer
                 
-                VStack {
-                    Text("WHSREVER")
-                    
-                    Spacer()
-                    
-                    Tab()
-                }
+                TopArticlesView()
             }
             .foregroundColor(.accentColor)
 

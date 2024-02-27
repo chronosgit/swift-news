@@ -1,5 +1,5 @@
 //
-//  Tab.swift
+//  TabView.swift
 //  News
 //
 //  Created by Nurken Kidirmaganbetov  on 27.02.2024.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct Tab: View {
+struct TabView: View {
     var body: some View {
         HStack {
             Spacer()

@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct TopArticlesListView: View {
+    typealias Article = NewsModel.Article
+    
     var articles: [Article]
     
     var body: some View {

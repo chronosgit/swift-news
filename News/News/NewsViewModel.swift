@@ -1,5 +1,5 @@
 //
-//  TopArticlesView.swift
+//  NewsViewModel.swift
 //  News
 //
 //  Created by Nurken Kidirmaganbetov  on 27.02.2024.
@@ -7,16 +7,10 @@
 
 import SwiftUI
 
-struct Article: Identifiable {
-    var imageUrl: URL
-    var title: String
-    var date: String
-    var author: String
-    var id: String
-}
-
-struct TopArticlesView: View {
-    var articles: [Article] = [
+class NewsViewModel: ObservableObject {
+    typealias Article = NewsModel.Article
+    
+    private static var articles: [Article] = [
         Article(
             imageUrl: URL(string: "https://placekitten.com/1920/1080")!,
             title: "Animals get boost from Stuihghwgrh free camps",
@@ -54,7 +48,17 @@ struct TopArticlesView: View {
         )
     ]
     
-    var body: some View {
-        TopArticlesListView(articles: articles)
+    @Published private var newsModel = NewsModel(articles: articles, allNews: true)
+    
+    var allNews: Bool {
+        newsModel.allNews
+    }
+    
+    var articles: [Article] {
+        newsModel.articles
+    }
+    
+    func chooseNews(type: String) {
+        newsModel.chooseNews(type: type)
     }
 }

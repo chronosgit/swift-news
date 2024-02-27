@@ -8,30 +8,31 @@
 import SwiftUI
 
 struct ContentView: View {
-    var all: Bool = false
+    @ObservedObject var newsViewModel: NewsViewModel
     
     var body: some View {
-            ZStack {
-                Color("bgColor")
-                    .ignoresSafeArea() // background changer
-                
-                VStack {
-                    if all {
-                        // TODO: - all news view
-                    } else {
-                        TopArticlesView()
-                    }
-                    
-                    Spacer()
-                    
-                    TabView()
+        ZStack {
+            Color("bgColor")
+                .ignoresSafeArea() // background changer
+            
+            VStack {
+                if newsViewModel.allNews {
+                    // TODO: - all news view
+                    Text("All news")
+                } else {
+                    TopArticlesListView(articles: newsViewModel.articles)
                 }
+                
+                Spacer()
+                
+                TabView()
             }
+        }
             .foregroundColor(.accentColor)
 
-        }
+    }
 }
 
 #Preview {
-    ContentView()
+    ContentView(newsViewModel: NewsViewModel()) // allowable
 }

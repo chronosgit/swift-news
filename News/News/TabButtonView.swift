@@ -8,12 +8,16 @@
 import SwiftUI
 
 struct TabButtonView: View {
+    @StateObject private var newsViewModel = NewsViewModel()
+    
     var title: String
     var imageName: String
     
     var body: some View {
         Button(
-            action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/,
+            action: {
+                newsViewModel.chooseNews(type: title)
+            },
             label: {
                 VStack(alignment: .center, spacing: 6) {
                     Image(systemName: imageName)
@@ -22,8 +26,4 @@ struct TabButtonView: View {
             }
         )
     }
-}
-
-#Preview {
-    TabButtonView(title: "All", imageName: "globe.europe.africa.fill")
 }

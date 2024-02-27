@@ -9,9 +9,11 @@ import SwiftUI
 
 @main
 struct NewsApp: App {
+    @StateObject var newsApp = NewsViewModel()
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(newsViewModel: newsApp)
         }
     }
 }

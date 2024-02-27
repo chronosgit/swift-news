@@ -8,15 +8,14 @@
 import SwiftUI
 
 struct TabButtonView: View {
-    @StateObject private var newsViewModel = NewsViewModel()
-    
     var title: String
     var imageName: String
+    var onClick: (String) -> ()
     
     var body: some View {
         Button(
             action: {
-                newsViewModel.chooseNews(type: title)
+                onClick(title)
             },
             label: {
                 VStack(alignment: .center, spacing: 6) {

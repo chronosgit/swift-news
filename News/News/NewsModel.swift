@@ -7,31 +7,58 @@
 
 import Foundation
 
-struct NewsModel {
-    private(set) var allNews: Bool
-    private(set) var articles: [Article]
+class NewsModel: ObservableObject {
+    @Published var allNews: Bool = true
+    @Published var articles: [Article] = [
+        Article(
+            imageUrl: URL(string: "https://placekitten.com/1920/1080")!,
+            title: "Animals get boost from Stuihghwgrh free camps",
+            date: "2024-02-27T12:05:00Z",
+            author: "Joseph Adinolfi",
+            id: "1"
+        ),
+        Article(
+            imageUrl: URL(string: "https://placekitten.com/1920/1080")!,
+            title: "Animals get boost from Stuihghwgrh free camps",
+            date: "2024-02-27T12:05:00Z",
+            author: "Joseph Adinolfi",
+            id: "2"
+        ),
+        Article(
+            imageUrl: URL(string: "https://placekitten.com/1920/1080")!,
+            title: "Animals get boost from Stuihghwgrh free camps",
+            date: "2024-02-27T12:05:00Z",
+            author: "Joseph Adinolfi",
+            id: "3"
+        ),
+        Article(
+            imageUrl: URL(string: "https://placekitten.com/1920/1080")!,
+            title: "Animals get boost from Stuihghwgrh free camps",
+            date: "2024-02-27T12:05:00Z",
+            author: "Joseph Adinolfi",
+            id: "4"
+        ),
+        Article(
+            imageUrl: URL(string: "https://placekitten.com/1920/1080")!,
+            title: "Animals get boost from Stuihghwgrh free camps",
+            date: "2024-02-27T12:05:00Z",
+            author: "Joseph Adinolfi",
+            id: "5"
+        )
+    ]
     
-    mutating func chooseNews(type: String) {
+    func chooseNews(type: String) {
         switch type {
         case "All":
-            print("toALL")
             allNews = true
-            print(allNews, "\n")
             break
         case "Top":
-            print("toTOP")
             allNews = false
-            print(allNews, "\n")
             break
         default:
             print("Error when choosing news type")
             break
         }
-    }
-    
-    init(articles: [Article], allNews: Bool) {
-        self.articles = articles
-        self.allNews = allNews
     }
     
     struct Article: Identifiable {

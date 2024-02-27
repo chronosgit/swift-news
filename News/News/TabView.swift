@@ -8,20 +8,24 @@
 import SwiftUI
 
 struct TabView: View {
+    var onClick: (String) -> ()
+    
     var body: some View {
         HStack {
             Spacer()
             
             TabButtonView(
                 title: "All",
-                imageName: "globe.europe.africa.fill"
+                imageName: "globe.europe.africa.fill",
+                onClick: self.onClick
             )
             
             Spacer()
             
             TabButtonView(
                 title: "Top",
-                imageName: "person.2.wave.2.fill"
+                imageName: "person.2.wave.2.fill",
+                onClick: self.onClick
             )
             
             Spacer()

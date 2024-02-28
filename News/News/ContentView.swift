@@ -22,7 +22,10 @@ struct ContentView: View {
                     // TODO: - all news view
                     Text("All news")
                 } else {
-                    TopArticlesListView(articles: newsModel.articles)
+                    TopArticlesListView(
+                        newsModel: newsModel, 
+                        articles: newsModel.articles
+                    )
                         .task {
                             await newsModel.updateTopNews()
                         }

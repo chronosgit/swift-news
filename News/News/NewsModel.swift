@@ -12,14 +12,14 @@ class NewsModel: ObservableObject {
     @Published var articles: [Article] = []
     
     var timer: Timer? = nil
-    var isFetchRequestActive = false
+    @Published var isFetchRequestActive = false
     
+    var totalPagesAmount: Int = 0
     let pageSize = 10
     @Published var currentPage = 1
     
     init() {
         if self.timer == nil {
-//            print("Initialized the timer\n")
             self.timer = Timer.scheduledTimer(timeInterval: 5, target: self, selector: #selector(timerCallback), userInfo: nil, repeats: true)
         }
     }
@@ -28,13 +28,11 @@ class NewsModel: ObservableObject {
         if(isFetchRequestActive) {
             return
         }
-//        print("Timer fetch has started...")
         
         Task {
             await updateTopNews()
             
             isFetchRequestActive = false
-//            print("Timer fetch has ended.\n")
         }
     }
     
@@ -49,8 +47,7 @@ class NewsModel: ObservableObject {
             let responseData = try await getTopNews()
             
             articles = responseData.articles
-            
-//            print("Fetch response length: \(articles.count)")
+            totalPagesAmount = responseData.totalResults
             
             isFetchRequestActive = false
         } catch APIError.invalidURL {
@@ -67,7 +64,7 @@ class NewsModel: ObservableObject {
     
     
     
-    func getTopNews() async throws -> JSONArray {
+    func getTopNews() async throws -> JSONAPIResponse {
         let apiKey = "11d441332483476f8871028f223af4da"
         let baseUrl = "https://newsapi.org/v2/"
         let country = "us"
@@ -87,8 +84,7 @@ class NewsModel: ObservableObject {
             let decoder = JSONDecoder()
             decoder.keyDecodingStrategy = .convertFromSnakeCase // just in case
             
-            // FIXME: - some error here occurs a lot, be careful with data types
-            return try decoder.decode(JSONArray.self, from: data)
+            return try decoder.decode(JSONAPIResponse.self, from: data)
         } catch {
             print(String(describing: error))
             
@@ -111,19 +107,39 @@ class NewsModel: ObservableObject {
     }
     
     func goToNextPage() {
-        if(currentPage > 1) {
+        if((pageSize * currentPage) <= (totalPagesAmount)) {
+            articles = []
+            
             currentPage += 1
+            
+            // FIXME: - Active API calls are not cancelled
+            isFetchRequestActive = false
+            
+            Task {
+                await updateTopNews()
+            }
         }
     }
     
     func goToPrevPage() {
-        if(articles.count == pageSize) {
+        if(currentPage > 1) {
+            articles = []
+            
             currentPage -= 1
+            
+            // FIXME: - Active API calls are not cancelled
+            isFetchRequestActive = false
+            
+            Task {
+                await updateTopNews()
+            }
         }
     }
     
-    struct JSONArray: Codable {
+    struct JSONAPIResponse: Codable {
+        var status: String
         var articles: [Article]
+        var totalResults: Int
     }
     
     struct Article: Codable {

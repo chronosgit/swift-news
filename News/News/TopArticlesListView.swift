@@ -10,11 +10,13 @@ import SwiftUI
 struct TopArticlesListView: View {
     typealias Article = NewsModel.Article
     
+    @ObservedObject var newsModel: NewsModel
+    
     var articles: [Article]
     
     var body: some View {
-        if articles.count == 0 {
-            Text("No news are visible yet...")
+        if articles.count == 0 && newsModel.isFetchRequestActive {
+            ProgressView()
                 .foregroundColor(.primary)
                 .font(.system(size: 24, weight: .semibold))
                 .padding()

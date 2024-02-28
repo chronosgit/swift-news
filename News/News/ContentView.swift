@@ -30,7 +30,11 @@ struct ContentView: View {
                 
                 Spacer()
                 
-                TabView(areAllNews: newsModel.allNews, onClick: newsModel.chooseNews)
+                VStack(spacing: 0) {
+                    PaginationButtonsView(newsModel: newsModel)
+                    
+                    TabView(areAllNews: newsModel.allNews, onClick: newsModel.chooseNews)
+                }
             }
         }
             .foregroundColor(.accentColor)

@@ -8,34 +8,51 @@
 import Foundation
 
 class NewsModel: ObservableObject {
-    @Published var allNews: Bool = true
+    @Published var allNews = true
     @Published var articles: [Article] = []
     
     var timer: Timer? = nil
+    var isFetchRequestActive = false
     
-//    init() {
-//        timer = Timer.scheduledTimer(timeInterval: 5, target: self, selector: #selector(updateTopNews), userInfo: nil, repeats: true)
-//    }
+    let pageSize = 10
+    @Published var currentPage = 1
     
-    func chooseNews(type: String) {
-        switch type {
-            case "All":
-                allNews = true
-                break
-            case "Top":
-                allNews = false
-                break
-            default:
-                print("Error when choosing news type")
-                break
+    init() {
+        if self.timer == nil {
+//            print("Initialized the timer\n")
+            self.timer = Timer.scheduledTimer(timeInterval: 5, target: self, selector: #selector(timerCallback), userInfo: nil, repeats: true)
+        }
+    }
+    
+    @objc func timerCallback() {
+        if(isFetchRequestActive) {
+            return
+        }
+//        print("Timer fetch has started...")
+        
+        Task {
+            await updateTopNews()
+            
+            isFetchRequestActive = false
+//            print("Timer fetch has ended.\n")
         }
     }
     
     @objc func updateTopNews() async {
+        if isFetchRequestActive {
+            return
+        }
+        
+        isFetchRequestActive = true
+        
         do {
             let responseData = try await getTopNews()
             
             articles = responseData.articles
+            
+//            print("Fetch response length: \(articles.count)")
+            
+            isFetchRequestActive = false
         } catch APIError.invalidURL {
             print("Invalid URL")
         } catch APIError.invalidResponse {
@@ -43,15 +60,18 @@ class NewsModel: ObservableObject {
         } catch APIError.invalidData {
             print("Invalid data returned in API call response")
         } catch {
+            print(String(describing: error))
             print("Unexpected error during updating top news has occured")
         }
     }
+    
+    
     
     func getTopNews() async throws -> JSONArray {
         let apiKey = "11d441332483476f8871028f223af4da"
         let baseUrl = "https://newsapi.org/v2/"
         let country = "us"
-        let endpoint = "\(baseUrl)top-headlines?country=\(country)&apiKey=\(apiKey)"
+        let endpoint = "\(baseUrl)top-headlines?country=\(country)&pageSize=\(pageSize)&page=\(currentPage)&apiKey=\(apiKey)"
         
         guard let url = URL(string: endpoint) else {
             throw APIError.invalidURL
@@ -73,6 +93,32 @@ class NewsModel: ObservableObject {
             print(String(describing: error))
             
             throw APIError.invalidData
+        }
+    }
+    
+    func chooseNews(type: String) {
+        switch type {
+            case "All":
+                allNews = true
+                break
+            case "Top":
+                allNews = false
+                break
+            default:
+                print("Error when choosing news type")
+                break
+        }
+    }
+    
+    func goToNextPage() {
+        if(currentPage > 1) {
+            currentPage += 1
+        }
+    }
+    
+    func goToPrevPage() {
+        if(articles.count == pageSize) {
+            currentPage -= 1
         }
     }
     
@@ -102,61 +148,3 @@ class NewsModel: ObservableObject {
         case invalidData
     }
 }
-
-
-// MARK: - Dummy Articles
-/*
- 
- [
-     Article(
-         urlToImage: URL(string: "https://placekitten.com/1920/1080")!,
-         title: "Animals get boost from Stuihghwgrh free camps",
-         publishedAt: "2024-02-27T12:05:00Z",
-         author: "Joseph Adinolfi"
-     ),
-     Article(
-         urlToImage: URL(string: "https://placekitten.com/1920/1080")!,
-         title: "Animals get boost from Stuihghwgrh free camps",
-         publishedAt: "2024-02-27T12:05:00Z",
-         author: "Joseph Adinolfi"
-     ),
-     Article(
-         urlToImage: URL(string: "https://placekitten.com/1920/1080")!,
-         title: "Animals get boost from Stuihghwgrh free camps",
-         publishedAt: "2024-02-27T12:05:00Z",
-         author: "Joseph Adinolfi"
-     ),
-     Article(
-         urlToImage: URL(string: "https://placekitten.com/1920/1080")!,
-         title: "Animals get boost from Stuihghwgrh free camps",
-         publishedAt: "2024-02-27T12:05:00Z",
-         author: "Joseph Adinolfi"
-     ),
-     Article(
-         urlToImage: URL(string: "https://placekitten.com/1920/1080")!,
-         title: "Animals get boost from Stuihghwgrh free camps",
-         publishedAt: "2024-02-27T12:05:00Z",
-         author: "Joseph Adinolfi"
-     )
-]
- 
-*/
-
-
-// MARK: - API Response example
-/*
- 
- {
- -"source": {
- "id": null,
- "name": "CNBC"
- },
- "author": "Alex Harring",
- "title": "Stocks are little changed Tuesday as traders assess fresh earnings and new data: Live updates - CNBC",
- "description": "Stocks were flat Tuesday as the market rally took another breather, with investors looking ahead to key data slated for release later this week.",
- "url": "https://www.cnbc.com/2024/02/26/stock-market-today-live-updates.html",
- "urlToImage": "https://image.cnbcfm.com/api/v1/image/107373645-17079283732024-02-14t161110z_791716537_rc2e26a80ifn_rtrmadp_0_usa-stocks.jpeg?v=1707928479&w=1920&h=1080",
- "publishedAt": "2024-02-27T14:42:00Z",
- "content": "Stocks were flat Tuesday as the market rally took another breather, with investors looking ahead to key data slated for release later this week.\r\nThe S&amp;P 500 inched down 0.05%, while the Dow Jone… [+1577 chars]"
- },
-*/

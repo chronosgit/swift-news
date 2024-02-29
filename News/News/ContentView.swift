@@ -25,7 +25,7 @@ struct ContentView: View {
                         articles: newsModel.articles
                     )
                         .task {
-                            await newsModel.updateAllNews()
+                            await newsModel.updateNews()
                         }
                 } else {
                     TopArticlesListView(
@@ -33,7 +33,7 @@ struct ContentView: View {
                         articles: newsModel.articles
                     )
                         .task {
-                            await newsModel.updateTopNews()
+                            await newsModel.updateNews()
                         }
                 }
                 

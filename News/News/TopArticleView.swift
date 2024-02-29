@@ -16,35 +16,41 @@ struct TopArticleView: View {
     var imagePlaceholder = "https://www.svgrepo.com/show/508699/landscape-placeholder.svg"
     
     var body: some View {
-        VStack {
-            HStack(alignment: .top, spacing: 16) {
-                AsyncImage(
-                    url: URL(string: imageUrl ?? imagePlaceholder)!,
-                    content: {image in
-                        image
-                            .resizable()
-                    },
-                    placeholder: {
-                        SkeletonImageView()
-                    }
-                )
-                    .clipShape(Capsule())
-                    .frame(maxWidth: 150, maxHeight: 150)
-                
-                VStack(alignment: .leading, spacing: 15) {
-                    Text(title ?? "Title")
-                        .font(.system(size: 20, weight: .bold))
-                    
-                    VStack(alignment: .leading, spacing: 5) {
-                        Text(author ?? "Author. F")
-                            .bold()
-                        
-                        Text(date ?? "2012-12-12")
-                    }
+        LazyVGrid(columns: [GridItem(.adaptive(minimum: 300), spacing: 0)]) {
+            AsyncImage(
+                url: URL(string: imageUrl ?? imagePlaceholder)!,
+                content: {image in
+                    image
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .clipped()
+                },
+                placeholder: {
+                    SkeletonImageView()
                 }
+            )
+            
+            VStack(alignment: .leading) {
+                Text(title ?? "Title")
+                    .font(.headline)
+                    .lineLimit(3)
+
+                HStack(alignment: .bottom, spacing: 8) {
+                    Text(author ?? "Author. F")
+                        .font(.caption)
+                        .multilineTextAlignment(.leading)
+                        .lineLimit(1)
+
+                    Text(date ?? "2012-12-12")
+                        .font(.caption)
+                }
+                    .foregroundColor(.gray)
+                        .padding(.top, 4)
+                    }
+                    .foregroundColor(.primary)
             }
-                .padding()
-                .foregroundColor(.primary)
+                .padding(20)
+                .background(Color.white)
+                .clipShape(RoundedRectangle(cornerRadius: 25))
         }
-    }
 }

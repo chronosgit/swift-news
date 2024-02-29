@@ -30,13 +30,13 @@ class NewsModel: ObservableObject {
         }
         
         Task {
-            await updateTopNews()
+            await updateNews()
             
             isFetchRequestActive = false
         }
     }
     
-    @objc func updateTopNews() async {
+    @objc func updateNews() async {
         if isFetchRequestActive {
             return
         }
@@ -44,7 +44,7 @@ class NewsModel: ObservableObject {
         isFetchRequestActive = true
         
         do {
-            let responseData = try await getTopNews()
+            let responseData = try await getNews()
             
             articles = responseData.articles
             totalPagesAmount = responseData.totalResults
@@ -52,23 +52,34 @@ class NewsModel: ObservableObject {
             isFetchRequestActive = false
         } catch APIError.invalidURL {
             print("Invalid URL")
+            isFetchRequestActive = false
         } catch APIError.invalidResponse {
             print("Invalid API call response")
+            isFetchRequestActive = false
         } catch APIError.invalidData {
             print("Invalid data returned in API call response")
+            isFetchRequestActive = false
         } catch {
             print(String(describing: error))
             print("Unexpected error during updating top news has occured")
+            isFetchRequestActive = false
         }
     }
     
     
     
-    func getTopNews() async throws -> JSONAPIResponse {
+    func getNews() async throws -> JSONAPIResponse {
+        // MARK: verify apiKey
         let apiKey = "11d441332483476f8871028f223af4da"
         let baseUrl = "https://newsapi.org/v2/"
         let country = "us"
-        let endpoint = "\(baseUrl)top-headlines?country=\(country)&pageSize=\(pageSize)&page=\(currentPage)&apiKey=\(apiKey)"
+        
+        var endpoint = ""
+        if allNews {
+            endpoint = "\(baseUrl)everything?pageSize=\(pageSize)&page=\(currentPage)&sortBy=relevancy&apiKey=\(apiKey)"
+        } else {
+            endpoint = "\(baseUrl)top-headlines?country=\(country)&pageSize=\(pageSize)&page=\(currentPage)&apiKey=\(apiKey)"
+        }
         
         guard let url = URL(string: endpoint) else {
             throw APIError.invalidURL
@@ -76,6 +87,7 @@ class NewsModel: ObservableObject {
         
         let (data, response) = try await URLSession.shared.data(from: url)
         
+        // MARK: -  May return 429 error due to free api subscription limitation
         guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
             throw APIError.invalidResponse
         }
@@ -93,16 +105,33 @@ class NewsModel: ObservableObject {
     }
     
     func chooseNews(type: String) {
+        var hasTypeChanged = false
+        
         switch type {
             case "All":
+                if(!allNews) {
+                    hasTypeChanged.toggle()
+                }
                 allNews = true
                 break
             case "Top":
+                if(allNews) {
+                    hasTypeChanged.toggle()
+                }
                 allNews = false
                 break
             default:
                 print("Error when choosing news type")
                 break
+        }
+        
+        if hasTypeChanged {
+            articles = []
+            currentPage = 1
+            
+            Task {
+                await updateNews()
+            }
         }
     }
     
@@ -112,11 +141,11 @@ class NewsModel: ObservableObject {
             
             currentPage += 1
             
-            // FIXME: - Active API calls are not cancelled
+            // TODO: - Active API calls are not cancelled
             isFetchRequestActive = false
             
             Task {
-                await updateTopNews()
+                await updateNews()
             }
         }
     }
@@ -127,11 +156,11 @@ class NewsModel: ObservableObject {
             
             currentPage -= 1
             
-            // FIXME: - Active API calls are not cancelled
+            // TODO: - Active API calls are not cancelled
             isFetchRequestActive = false
             
             Task {
-                await updateTopNews()
+                await updateNews()
             }
         }
     }
@@ -162,60 +191,6 @@ class NewsModel: ObservableObject {
         case invalidURL
         case invalidResponse
         case invalidData
-    }
-    
-    @objc func updateAllNews() async {
-        if isFetchRequestActive {
-            return
-        }
-        
-        isFetchRequestActive = true
-        
-        do {
-            let responseData = try await getTopNews()
-            
-            articles = responseData.articles
-            totalPagesAmount = responseData.totalResults
-            
-            isFetchRequestActive = false
-        } catch APIError.invalidURL {
-            print("Invalid URL")
-        } catch APIError.invalidResponse {
-            print("Invalid API call response")
-        } catch APIError.invalidData {
-            print("Invalid data returned in API call response")
-        } catch {
-            print(String(describing: error))
-            print("Unexpected error during updating top news has occured")
-        }
-    }
-    
-    func getAllNews() async throws -> JSONAPIResponse {
-        let apiKey = "11d441332483476f8871028f223af4da"
-        let baseUrl = "https://newsapi.org/v2/"
-        let country = "us"
-        let endpoint = "\(baseUrl)country=\(country)&pageSize=\(pageSize)&page=\(currentPage)&apiKey=\(apiKey)"
-        
-        guard let url = URL(string: endpoint) else {
-            throw APIError.invalidURL
-        }
-        
-        let (data, response) = try await URLSession.shared.data(from: url)
-        
-        guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
-            throw APIError.invalidResponse
-        }
-        
-        do {
-            let decoder = JSONDecoder()
-            decoder.keyDecodingStrategy = .convertFromSnakeCase // just in case
-            
-            return try decoder.decode(JSONAPIResponse.self, from: data)
-        } catch {
-            print(String(describing: error))
-            
-            throw APIError.invalidData
-        }
     }
     
 }

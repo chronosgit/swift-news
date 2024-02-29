@@ -163,4 +163,59 @@ class NewsModel: ObservableObject {
         case invalidResponse
         case invalidData
     }
+    
+    @objc func updateAllNews() async {
+        if isFetchRequestActive {
+            return
+        }
+        
+        isFetchRequestActive = true
+        
+        do {
+            let responseData = try await getTopNews()
+            
+            articles = responseData.articles
+            totalPagesAmount = responseData.totalResults
+            
+            isFetchRequestActive = false
+        } catch APIError.invalidURL {
+            print("Invalid URL")
+        } catch APIError.invalidResponse {
+            print("Invalid API call response")
+        } catch APIError.invalidData {
+            print("Invalid data returned in API call response")
+        } catch {
+            print(String(describing: error))
+            print("Unexpected error during updating top news has occured")
+        }
+    }
+    
+    func getAllNews() async throws -> JSONAPIResponse {
+        let apiKey = "11d441332483476f8871028f223af4da"
+        let baseUrl = "https://newsapi.org/v2/"
+        let country = "us"
+        let endpoint = "\(baseUrl)country=\(country)&pageSize=\(pageSize)&page=\(currentPage)&apiKey=\(apiKey)"
+        
+        guard let url = URL(string: endpoint) else {
+            throw APIError.invalidURL
+        }
+        
+        let (data, response) = try await URLSession.shared.data(from: url)
+        
+        guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
+            throw APIError.invalidResponse
+        }
+        
+        do {
+            let decoder = JSONDecoder()
+            decoder.keyDecodingStrategy = .convertFromSnakeCase // just in case
+            
+            return try decoder.decode(JSONAPIResponse.self, from: data)
+        } catch {
+            print(String(describing: error))
+            
+            throw APIError.invalidData
+        }
+    }
+    
 }

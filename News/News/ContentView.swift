@@ -20,7 +20,13 @@ struct ContentView: View {
             VStack {
                 if newsModel.allNews {
                     // TODO: - all news view
-                    Text("All news")
+                    TopArticlesListView(
+                        newsModel: newsModel,
+                        articles: newsModel.articles
+                    )
+                        .task {
+                            await newsModel.updateAllNews()
+                        }
                 } else {
                     TopArticlesListView(
                         newsModel: newsModel, 

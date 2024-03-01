@@ -76,7 +76,7 @@ class NewsModel: ObservableObject {
         
         var endpoint = ""
         if allNews {
-            endpoint = "\(baseUrl)everything?pageSize=\(pageSize)&page=\(currentPage)&sortBy=relevancy&apiKey=\(apiKey)"
+            endpoint = "\(baseUrl)everything?q=bitcoin&pageSize=\(pageSize)&page=\(currentPage)&sortBy=relevancy&apiKey=\(apiKey)"
         } else {
             endpoint = "\(baseUrl)top-headlines?country=\(country)&pageSize=\(pageSize)&page=\(currentPage)&apiKey=\(apiKey)"
         }
@@ -89,6 +89,7 @@ class NewsModel: ObservableObject {
         
         // MARK: -  May return 429 error due to free api subscription limitation
         guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
+            print(response)
             throw APIError.invalidResponse
         }
         

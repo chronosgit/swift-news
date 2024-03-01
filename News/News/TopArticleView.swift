@@ -22,7 +22,7 @@ struct TopArticleView: View {
                 content: {image in
                     image
                         .resizable()
-                        .aspectRatio(contentMode: .fit)
+                        .aspectRatio(1, contentMode: .fit)
                         .clipped()
                 },
                 placeholder: {

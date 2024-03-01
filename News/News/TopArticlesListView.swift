@@ -33,6 +33,7 @@ struct TopArticlesListView: View {
                     )
                 }
             }
+                .padding()
         }
     }
 }

@@ -19,7 +19,6 @@ struct ContentView: View {
             
             VStack {
                 if newsModel.allNews {
-                    // TODO: - all news view
                     TopArticlesListView(
                         newsModel: newsModel,
                         articles: newsModel.articles
@@ -32,9 +31,6 @@ struct ContentView: View {
                         newsModel: newsModel, 
                         articles: newsModel.articles
                     )
-                        .task {
-                            await newsModel.updateNews()
-                        }
                 }
                 
                 Spacer()
